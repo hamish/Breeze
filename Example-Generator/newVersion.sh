@@ -1,5 +1,5 @@
 
-TIMESTAMP=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+TIMESTAMP=`date -u +"%Y%m%d-%H%M%S"`
 BUCKET="my-breeze-bucket"
 DIRECTORY="output"
 
