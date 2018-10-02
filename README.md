@@ -46,9 +46,11 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 
 1. If Version Label was not specified, generate a new version lable (yyyyMMdd-HHmmss)
 1. Read the project definition file and obtain the generator command, the bucket and prefix names.
-1. Generate the parameters to the generator
-    # bucket_url: https://s3.amazonaws.com/<bucket_name>/bucket_prefix/<version_label>
-    # output_directory: output/<project_name>/version
+1. Generate the parameters to the generator:
+
+   bucket_url: https://s3.amazonaws.com/<bucket_name>/bucket_prefix/<version_label>
+   output_directory: output/<project_name>/version
+
 1. Run the generator, waiting for completion.
 1. If the execution returned an error, print what we can and exit.
 1. Optional: Copy the output from the versioned directory to output/<project_name>-latest/
@@ -57,7 +59,13 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 
 
 
+## Launch
 
+    breeze launch <project_name> <stack_name>
+
+### Waht this does
+
+1. 
 
 
 
