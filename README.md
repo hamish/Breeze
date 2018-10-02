@@ -28,6 +28,19 @@ This is a directory containing a breeze.toml configutation file, and other files
     # The default template name. 
     template_name="main"
 
+    # Parameters to be used when launching a stack
+    [Parameters]
+    # Webserver Instance Size
+    webserver_instance_size="t3.micro"
+
+    [Parameters.by_account_id.359123456789]
+    # A route 53 domain that has already been configured to exist in the account
+    domain_name="testing.breeze.org.au"
+
+    [Parameters.by_account_id.953123456789]
+    # A route 53 domain that has already been configured to exist in the account
+    domain_name="production.breeze.org.au"
+
 # Breeze Infrastructure Definition
 
 An Infrastructure Definition (ID) is a directory structure of files that make up the templates, policy 
@@ -114,6 +127,10 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 
 TODO:
 
+## Execute breeze in cloud
+
+All breeze commands (except perhaps generate) should execute in lambda/step functions rather than on a particular computer. This makes the capabilities available to a wider range of users and enables alternative UI's (web, voice, etc) and should improve robustness.
+
 ## Additional Commands
 
 There are a number of extra commands to document, including:
@@ -126,6 +143,11 @@ There are a number of extra commands to document, including:
 ## Additional cli options
 
 * The ability to wait for a CF operation to complete.
+
+## Additional parameter options
+
+* allow users to specify queries for ami's at launch/update time. eg latest windows or linux ami.
+* there are probably other dimensions that paramters should be configurable along than just accountid.
 
 
 # Integrating with CI/CD pipelines.
