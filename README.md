@@ -49,6 +49,7 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 1. Generate the parameters to the generator:
 
    bucket_url: https://s3.amazonaws.com/<bucket_name>/bucket_prefix/<version_label>
+   
    output_directory: output/<project_name>/version
 
 1. Run the generator, waiting for completion.
