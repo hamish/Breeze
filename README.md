@@ -25,6 +25,9 @@ This is a directory containing a breeze.toml configutation file, and other files
     # The version label will be used to further seperate the infrastructure definitions.
     id_prefix="infrstructure-definitions/<project_name>/"
 
+    # The default template name. 
+    template_name="main"
+
 # Breeze Infrastructure Definition
 
 An Infrastructure Definition (ID) is a directory structure of files that make up the templates, policy 
@@ -49,7 +52,7 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 1. Generate the parameters to the generator:
 
    bucket_url: https://s3.amazonaws.com/<bucket_name>/bucket_prefix/<version_label>
-   
+
    output_directory: output/<project_name>/version
 
 1. Run the generator, waiting for completion.
@@ -58,29 +61,81 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 1. Upload the versioned ID directory to s3.
 1. Add variables to ssm parameter store to enable the version to be discovered.
 
+   TODO: Determine what SSM Parameters to upload...
+
 
 
 ## Launch
 
-    breeze launch <project_name> <stack_name>
+    breeze launch <project_name> <stack_name> [--version version_label] [--main-template template_name] [--override parameter_name=parameter_value [--override parameter_name=parameter_value]]
 
-### Waht this does
+### What this does:
 
-1. 
-
-
-
-
-    usage: breeze command [options] 
-
-    verge generate -v version_label output_directory -d breeze_project_directory
-    breeze launch stack_name -p project_name -l version_label [-o parameter_name=value [-o parameter_name=value]
-    breeze update_version stack_name -l version_label
-    breeze launch_child_stack parent_stack_name -t template_name
-    breeze delete_child_stack parent_stack_name -t template_name
-    breeze apply_policy stack_name policy_name
-    breeze remove_policy stack_name
+1. Check that no stack with the name exists, or if it does and is in a delete in progress state, wait until the delete is complete.
+1. If version not specified, retrieve the  /breeze/<project_name>/default-version parameter from SSM. Use this value as version_label
+1. Retrieve the /breeze/<project_name>/versions/<version_label>/breeze-project-definition-url parameter from SSM.
+1. Download the breeze project definition file from S3.
+1. If template_name not specified, obtain the default from the breeze project definition file.
+1. Retrieve the main template from S3 and parse the file, noting the parameters.
+1. Apply any override parameters if applicable.
+1. Identify the matching parameters in the definition file.
+1. Launch the new stack with the template, the stack_name and the parameters.
 
 
 
+## Update
 
+    breeze update <stack_name> [--version version_label] [--main-template template_name] [--override parameter_name=parameter_value [--override parameter_name=parameter_value]] [--apply-change]
+
+### What this does:
+
+1. Check that the specified stack exists, and that it is in an updatable status, if not, wait until it becomes updatable.
+1. If the version is not specified, obtain the version from the currently running stack.
+1. If the template name is not specified, obtain the version from the currently running stack.
+1. Obtain the parameter values from the currently running stack. (Note that "NoEcho" parameter values are not available from the stack.)
+1. Obtain the project definition file and the main templates files from S3.
+1. Construct the parameters, using overrides, then current stack values, then values from the project definition file as precidence.
+1. Create a change set with the stack_name, template and parameters.
+1. Wait until the change set is available, print the change.
+1. If the apply-change flag has been set, apply the change.
+
+
+
+## Delete 
+
+    breeze delete <stack_name>
+
+### What this does:
+
+1. Check that the specified stack exists and that it is in a deletable status, if not, wait until it becomes deletable.
+1. Delete the stack.
+1. Watch the progress of the stack deletion, and take restorative measures if failures occur. This could involve re-submitting the delete, resubmitting but passing the option to retain the resources that failed to delete, or using the API to delete the resource in qustion.
+
+
+TODO:
+
+## Additional Commands
+
+There are a number of extra commands to document, including:
+
+    breeze apply_policy <stack_name> <policy_name>
+    breeze remove_policy <stack_name>
+    breeze launch-child <main_stack_name> <child_template_name> [--override parameter_name=parameter_value [--override parameter_name=parameter_value]] 
+    breeze delete-child <main_stack_name> <child_template_name>
+
+## Additional cli options
+
+* The ability to wait for a CF operation to complete.
+
+
+# Integrating with CI/CD pipelines.
+
+Breeze provides the ability to launch a stack at a particular version and then upgrade the stack to a new version. It is intended that in a CI/CD situation, a stack will be launched at the same version as a target stack (production, UAT, etc), a newer version applied and tests executed to determine if there were problems during stack update. If the tests pass, the version is considered suitable to be installed in the next and the CI/CD pipeling moves on to the next stage.
+
+# Automation
+
+It is intended that launching and deleting stacks can be integrated with a home/office automation system such as Alexia. 
+
+# Automatic Deletion of stacks.
+
+Stacks in development avccounts may be given a time to live, and are subject to deletion after that time.
