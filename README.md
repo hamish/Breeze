@@ -20,7 +20,7 @@ This is a directory containing a breeze.toml configutation file, and other files
 
 An Infrastructure Definition (ID) is a directory structure of files that make up the templates, policy 
 files and other artifacts needed to launch a cloudformation stack. For IDs that create nested stacks, 
-the eventual bucket name and prefix must be known at generation time. This is because [the reference to the nested stack must be a fully qualified s3 URL(https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-templateurl).
+the eventual bucket name and prefix must be known at generation time. This is because [the reference to the nested stack must be a fully qualified s3 URL](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html#cfn-cloudformation-stack-templateurl).
 
 The Project Definition generator creaets these files on disk locally, the breeze tool is repsponsible for uploading them to S3.
 
