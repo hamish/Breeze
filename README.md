@@ -127,6 +127,17 @@ The breeze cli is a tool designed to help create and use Infrastructure Definiti
 
 TODO:
 
+## Why is this useful
+
+Update this to describe why someone would choose to use this rather than the aws cli, or one of the other tools.
+
+Some Benefits:
+
+* Allows developers to obtain a set of infrastructure with the same (or simmilar) settings to produciton easily.
+* Allows developers to reherse the upgrade of a set of infrastructure from one set of templates to another in a controlled way.
+* Allows administrators to apply stack policies that protect infrastructure from getting removed or replaced by an error in a template.
+* Allows infrastructure that is only intermittently needed (prototype servers for example) to be created when needed in a child template and then destroyed when no longer needed.
+
 ## Execute breeze in cloud
 
 All breeze commands (except perhaps generate) should execute in lambda/step functions rather than on a particular computer. This makes the capabilities available to a wider range of users and enables alternative UI's (web, voice, etc) and should improve robustness.
